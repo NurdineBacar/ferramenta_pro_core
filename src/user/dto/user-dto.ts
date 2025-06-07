@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   IsString,
   IsEmail,
@@ -24,6 +25,12 @@ export class UserResponseDto {
   @IsArray()
   token: string[];
 
+  @IsString()
+  role: string;
+
+  @Exclude()
+  password: string;
+
   @IsDate()
   createdAt: Date;
 
@@ -45,4 +52,7 @@ export class CreateUserDto {
   @MinLength(6)
   @MaxLength(8)
   password: string;
+
+  @IsString()
+  role: string;
 }

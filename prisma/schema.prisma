@@ -22,7 +22,25 @@ model User {
   email           String @unique
   phone_number    String
   password        String
+  role            String
   token           String[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+
+model Epi {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  category      String
+  description   String?
+  minDays       Int
+  maxDays       Int?
+  images        String[]
+  stock         Int
+  availables    Int
+  status        Boolean?  @default(true)
+  pricePerDay    Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

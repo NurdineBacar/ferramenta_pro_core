@@ -13,8 +13,9 @@ export class UserService {
         data: {
           name: data.name.toLowerCase(),
           email: data.email,
-          phone_number: `${data.phone_number.substring(0, 2)} ${data.phone_number.substring(3, 6)} ${data.phone_number.substring(6, 10)}`,
+          phone_number: `(+258) ${data.phone_number.substring(0, 2)} ${data.phone_number.substring(3, 6)} ${data.phone_number.substring(6, 10)}`,
           password: data.password,
+          role: data.role,
         },
       });
 
@@ -32,7 +33,7 @@ export class UserService {
 
   async getAll(): Promise<any> {
     try {
-      const resp = await this.prisma.user.findMany();
+      const resp = await this.prisma.user.findMany({});
 
       if (resp.length == 0) {
         return {
@@ -44,6 +45,22 @@ export class UserService {
       return {
         success: true,
         data: plainToInstance(UserResponseDto, resp),
+      };
+    } catch (error) {
+      throw new HttpException(
+        'Erro ao processar requisicao -> ' + error,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async deleteAll(): Promise<any> {
+    try {
+      const resp = await this.prisma.user.deleteMany();
+
+      return {
+        success: true,
+        resp,
       };
     } catch (error) {
       throw new HttpException(

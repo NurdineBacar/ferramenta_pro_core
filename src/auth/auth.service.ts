@@ -7,6 +7,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto/auth-dto';
 import { JwtService } from '@nestjs/jwt';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from 'src/user/dto/user-dto';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +31,10 @@ export class AuthService {
       throw new UnauthorizedException('Senha incorreta');
     }
 
-    const payload = { sub: user.id, email: user.email }; // Não inclua dados sensíveis no payload
+    const payload = {
+      sub: user.id,
+      user: plainToInstance(UserResponseDto, user),
+    };
 
     return {
       access_token: await this.jwt.signAsync(payload),
