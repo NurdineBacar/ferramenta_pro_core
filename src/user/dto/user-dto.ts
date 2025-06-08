@@ -56,3 +56,14 @@ export class CreateUserDto {
   @IsString()
   role: string;
 }
+
+export class UpdateProfileDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  email: string;
+
+  @IsString()
+  phone_number: string;
+}

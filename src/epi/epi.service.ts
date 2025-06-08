@@ -129,9 +129,8 @@ export class EpiService {
 
   async update(id: string, epi: UpdateEpiDto): Promise<any> {
     try {
-      await this.deleteEpi(id);
-
-      const resp = await this.prisma.epi.create({
+      const resp = await this.prisma.epi.update({
+        where: { id: id },
         data: {
           title: epi.title,
           category: epi.category,
@@ -251,6 +250,19 @@ export class EpiService {
         'erro ao processar requisicao -> ' + error,
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async deleteAll(): Promise<any> {
+    try {
+      const resp = await this.prisma.epi.deleteMany();
+
+      return {
+        success: true,
+        data: resp,
+      };
+    } catch (error) {
+      return error;
     }
   }
 }

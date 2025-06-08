@@ -1,6 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto, UserResponseDto } from './dto/user-dto';
+import {
+  CreateUserDto,
+  UpdateProfileDto,
+  UserResponseDto,
+} from './dto/user-dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -33,7 +37,12 @@ export class UserService {
 
   async getAll(): Promise<any> {
     try {
-      const resp = await this.prisma.user.findMany({});
+      const resp = await this.prisma.user.findMany({
+        include: {
+          favorites: true,
+          Reservation: true,
+        },
+      });
 
       if (resp.length == 0) {
         return {
@@ -61,6 +70,29 @@ export class UserService {
       return {
         success: true,
         resp,
+      };
+    } catch (error) {
+      throw new HttpException(
+        'Erro ao processar requisicao -> ' + error,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async updateProfile(id: string, data: UpdateProfileDto): Promise<any> {
+    try {
+      const resp = await this.prisma.user.update({
+        where: { id: id },
+        data: {
+          name: data.name.toUpperCase(),
+          email: data.email,
+          phone_number: `(+258) ${data.phone_number.substring(0, 2)} ${data.phone_number.substring(3, 6)} ${data.phone_number.substring(6, 10)}`,
+        },
+      });
+
+      return {
+        success: true,
+        data: plainToInstance(UserResponseDto, resp),
       };
     } catch (error) {
       throw new HttpException(

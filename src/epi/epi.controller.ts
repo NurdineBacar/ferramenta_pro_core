@@ -36,6 +36,11 @@ export class EpiController {
     return this.epiService.getByCategorie(categoria);
   }
 
+  @Delete('delete-all')
+  async deleteAll() {
+    return this.epiService.deleteAll();
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.epiService.deleteEpi(id);

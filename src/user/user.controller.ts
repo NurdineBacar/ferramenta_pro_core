@@ -1,6 +1,14 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/user-dto';
+import { CreateUserDto, UpdateProfileDto } from './dto/user-dto';
 import { Public } from 'src/auth/const/constants';
 
 @Public()
@@ -21,5 +29,13 @@ export class UserController {
   @Delete('delete-all')
   deleteAll() {
     return this.userService.deleteAll();
+  }
+
+  @Put('edit-profile/:userId')
+  updateProfile(
+    @Param('userId') userId: string,
+    @Body() data: UpdateProfileDto,
+  ) {
+    return this.userService.updateProfile(userId, data);
   }
 }
